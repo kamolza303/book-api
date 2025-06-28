@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 public class BookRequest {
 
-    @NotBlank
+    @NotBlank(message = "Title must not be empty")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "author must not be empty")
     private String author;
 
     @NotNull
