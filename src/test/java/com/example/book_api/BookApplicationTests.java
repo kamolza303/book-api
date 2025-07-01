@@ -36,7 +36,7 @@ class BookApplicationTests {
 	}
 
 	@Test
-	public void testSaveBookValidationError() throws Exception {
+	public void testSaveBookValidationTitleError() throws Exception {
 		String json = """
         {
           "title": "",
@@ -50,6 +50,23 @@ class BookApplicationTests {
 						.content(json))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.title").value("Title must not be empty"));
+	}
+
+	@Test
+	public void testSaveBookValidationAuthorError() throws Exception {
+		String json = """
+        {
+          "title": "Test",
+          "author": "",
+          "publishedDateBuddhist": "2567-01-01"
+        }
+    """;
+
+		mockMvc.perform(post("/books")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(json))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.author").value("author must not be empty"));
 	}
 
 	@Test
