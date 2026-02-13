@@ -3,7 +3,7 @@ package com.example.book_api.controller;
 
 import com.example.book_api.dto.BookRequest;
 import com.example.book_api.entity.Book;
-import com.example.book_api.service.BookServiceImpl;
+import com.example.book_api.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,25 +21,25 @@ public class BookController {
 
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
 
-    private final BookServiceImpl bookServiceImpl;
+    private final BookService bookService;
 
-    public BookController(BookServiceImpl bookServiceImpl) {
-        this.bookServiceImpl = bookServiceImpl;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping
     public List<Book> findByAuthor(@RequestParam String author) {
-        return bookServiceImpl.findByAuthor(author);
+        return bookService.findByAuthor(author);
     }
 
     @GetMapping("/count")
     public Long getCount() {
-        return bookServiceImpl.getCount();
+        return bookService.getCount();
     }
 
     @PostMapping
     public ResponseEntity<Book> saveBook(@Valid @RequestBody BookRequest request) {
-        Book book = bookServiceImpl.saveBook(request);
+        Book book = bookService.saveBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(book);
     }
 

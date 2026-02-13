@@ -6,6 +6,8 @@ import com.example.book_api.service.EmployeeService;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +44,7 @@ public class EmployeeController {
     @PostMapping()
     public Employee addEmployee(@RequestBody @Validated EmployeeRequest employeeRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().stream()
+            bindingResult.getFieldErrors()
                     .forEach(fieldError -> {
                         throw new ValidationException(fieldError.getField() + ":" + fieldError.getDefaultMessage());
                     });
@@ -63,6 +65,18 @@ public class EmployeeController {
         return employeeService.updateEmployee(employeeRequest, id);
     }
 
+    @PatchMapping("/{id}")
+    public Employee updatePartial(@RequestBody @Validated EmployeeRequest employeeRequest, BindingResult bindingResult, @PathVariable long id) {
+        if(bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().stream()
+                    .forEach(fieldError -> {
+                        throw new ValidationException(fieldError.getField() + ":" + fieldError.getDefaultMessage());
+                    });
+        }
+
+        return employeeService.updatePartial(employeeRequest, id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable long id) {
         employeeService.deleteEmployee(id);
@@ -72,5 +86,4 @@ public class EmployeeController {
     public int calculateAge(@RequestBody EmployeeRequest employeeRequest) {
         return employeeService.calculateAge(employeeRequest.getDateOfBirthday());
     }
-
 }

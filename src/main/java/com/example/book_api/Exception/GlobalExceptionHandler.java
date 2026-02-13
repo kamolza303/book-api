@@ -1,5 +1,6 @@
 package com.example.book_api.Exception;
 
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,5 +42,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEmployeeNotFound(EmployeeNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Map<String, String>> handleJakartaValidationException(ValidationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage()); // ดึงข้อความจาก exception
+        return ResponseEntity.badRequest().body(error); // ส่งกลับ HTTP 400
+    }
+
 }
 

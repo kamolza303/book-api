@@ -67,6 +67,18 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
+    public Employee updatePartial(EmployeeRequest req, Long id) {
+        Employee emp = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+
+        if (req.getFirstName() != null) emp.setFirstName(req.getFirstName());
+        if (req.getLastName() != null) emp.setLastName(req.getLastName());
+        if (req.getPosition() != null) emp.setPosition(req.getPosition());
+
+        return employeeRepository.save(emp);
+    }
+
+    @Override
     public void deleteEmployee(Long id) {
         if (!employeeRepository.existsById(id)) {
             throw new EmployeeNotFoundException(id);
@@ -87,4 +99,5 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
         return employees;
     }
+
 }
